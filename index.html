@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event System - Multi-Dashboard Panel</title>
+    <link rel="stylesheet" href="style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+    </head>
+<body>
+
+    <aside class="sidebar">
+        <div>
+            <div class="sidebar-brand">Event Engine</div>
+            <div class="menu-section">
+                <div class="section-title">Select Dashboard Role</div>
+                <button class="sidebar-menu-item active" data-role="super-admin"><span>👑</span> Super Admin Dashboard</button>
+                <button class="sidebar-menu-item" data-role="admin"><span>🏢</span> Administration Dashboard</button>
+            </div>
+        </div>
+        <div class="sidebar-footer" id="sidebar-role-footer">Role: Super Admin (R5)</div>
+    </aside>
+
+    <div class="main-container">
+        <header class="top-navbar">
+            <div class="nav-breadcrumbs" id="breadcrumb-text">Super Admin Dashboard / Hackathon (Temp)</div>
+            <div class="role-simulator" id="role-simulator-indicator">Simulate Role: R5 - Super Admin</div>
+        </header>
+
+        <main class="content-panel" id="main-content-wrapper">
+            <h1 class="main-title" id="dashboard-main-title">Super Admin Dashboard</h1>
+
+            <div class="dashboard-switcher-box">
+                <div class="switcher-header-flex">
+                    <div class="switcher-title">Events Switcher Panel <span id="right-click-notice" style="color: #6b7280; text-transform: none; font-weight: normal; margin-left: 10px;">(Right-click tab to remove)</span></div>
+                    <div class="create-event-form" id="create-event-form-wrapper">
+                        <button id="btn-undo-event-action" class="btn-create-submit" style="background-color: #4b5563; display: none; margin-right: 4px;">↩ Undo Delete</button>
+                        <input type="text" id="new-event-title-input" class="create-event-input" placeholder="Enter new event title...">
+                        <button id="btn-create-event-action" class="btn-create-submit">+ Create Event</button>
+                    </div>
+                </div>
+                <div class="switcher-grid" id="events-buttons-container">
+                    <button class="event-btn active" data-target="event-hackathon">Hackathon (Temp)</button>
+                    <button class="event-btn" data-target="event-bplan">Business Plan</button>
+                    <button class="event-btn" data-target="event-poster">Poster Presentation</button>
+                    <button class="event-btn" data-target="event-coding">Coding Competition</button>
+                    <button class="event-btn" data-target="event-sharktank">Shark Tank</button>
+                </div>
+            </div>
+
+            <div id="event-hackathon" class="event-details-panel active-details">
+                <h2 style="margin-bottom: 20px; color:#111827; font-size: 20px;">Hackathon (Temporary Event) Information</h2>
+                
+                <div class="counter-stats-grid">
+                    <div class="stat-card" id="total-teams-trigger-card" style="cursor: pointer; transition: all 0.2s; border-left: 4px solid var(--primary-color);">
+                        <div class="stat-label">Total Teams Registered</div>
+                        <div class="stat-value stat-orange">42 Teams</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-label">Total Confirmed Participants</div>
+                        <div class="stat-value stat-green">168 Students</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Pending Administration Queries</div>
+                        <div class="stat-value stat-red">3 Active</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header-flex">
+                        <h3 class="card-title">📋 Section I: List of the Participants (R2)</h3>
+                        <input type="text" id="participant-search-input" class="form-control" placeholder="🔍 Search participant or team..." style="width: 240px; margin-bottom: 0; padding: 6px 10px;">
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr><th>Name</th><th>Team Name</th><th>Phone Nos</th><th>Mail ID</th><th>Req. More Members</th><th>Status</th><th>More Info</th></tr>
+                            </thead>
+                            <tbody id="participants-table-body">
+                                <tr><td>Aarav Sharma</td><td>Alpha Coders</td><td>+91 98765 43210</td><td>aarav@gmail.com</td><td><span class="badge badge-warning">No</span></td><td><span class="badge badge-success">Active</span></td><td><input type="checkbox" checked> View</td></tr>
+                                <tr><td>Neha Patil</td><td>Byte Wizards</td><td>+91 87654 32109</td><td>neha.p@yahoo.com</td><td><span class="badge badge-info">Yes (1)</span></td><td><span class="badge badge-success">Active</span></td><td><input type="checkbox"> View</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header-flex">
+                        <h3 class="card-title">🤝 Section II: List of Organisers / Volunteers (R3)</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <form id="r3-validator-form">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Committee (Multiple) <button type="button" class="btn-orange-plus" id="btn-add-r3-committee" title="Add Entry">+</button></th>
+                                        <th>Email ID</th>
+                                        <th>Phone No</th>
+                                        <th>Role Assignment <button type="button" class="btn-orange-plus" id="btn-add-r3-role" title="Assign quick role">+</button></th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="organizers-table-body">
+                                    <tr id="inline-add-form-row" style="display: none; background-color: #fdf8f5;">
+                                        <td><input type="text" id="form-r3-name" class="table-form-input" placeholder="Name" required></td>
+                                        <td><input type="text" id="form-r3-committee" class="table-form-input" placeholder="Committee" required></td>
+                                        <td><input type="email" id="form-r3-email" class="table-form-input" placeholder="email@domain.com" required></td>
+                                        <td><input type="text" id="form-r3-phone" class="table-form-input" placeholder="10 digits" pattern="^[0-9]{10}$" required></td>
+                                        <td><input type="text" id="form-r3-role" class="table-form-input" placeholder="Role" required></td>
+                                        <td style="display: flex; gap: 4px;">
+                                            <button type="submit" class="btn-save-inline">💾 Save</button>
+                                            <button type="button" class="btn-action-delete" id="btn-cancel-inline-r3" style="padding: 5px 8px;">X</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Rahul Verma</td>
+                                        <td>Technical, Logistics</td>
+                                        <td>rahul.v@college.edu</td>
+                                        <td>+91 76543 21098</td>
+                                        <td>Server Management</td>
+                                        <td><button type="button" class="btn-action-delete" onclick="this.closest('tr').remove()">🗑️ Delete</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="grid-3-col">
+                    <div class="card" id="broadcast-management-card">
+                        <h3 class="card-title" style="margin-bottom: 12px;">Broadcast Live Update (R5 Panel)</h3>
+                        <div class="broadcast-card-inner">
+                            <input type="text" id="broadcast-headline" class="form-control" placeholder="Headline / Title" style="margin-bottom:0;">
+                            <select id="broadcast-type" class="broadcast-select">
+                                <option value="Important Alert">Important Alert</option>
+                                <option value="General News">General News</option>
+                            </select>
+                            <input type="text" id="broadcast-desc" class="form-control" placeholder="'Short description details...'" style="margin-bottom:0;">
+                            <button id="btn-submit-broadcast" class="broadcast-btn-submit">Broadcast Live Update</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title" style="margin-bottom:12px;">⏱️ Schedule / Itinerary</h3>
+                        <ul class="dynamic-list" id="schedule-list">
+                            <li><span>09:00 AM - Orientation</span><button class="btn-delete-item" onclick="this.parentElement.remove()">×</button></li>
+                            <li><span>10:30 AM - Hacking Starts</span><button class="btn-delete-item" onclick="this.parentElement.remove()">×</button></li>
+                            <li><span>02:00 PM - Mentor Review</span><button class="btn-delete-item" onclick="this.parentElement.remove()">×</button></li>
+                        </ul>
+                        <div class="input-group-inline">
+                            <input type="text" id="input-schedule" class="form-control" placeholder="e.g., 04:00 PM - Run">
+                            <button class="btn-orange-plus" id="btn-add-schedule" style="width:35px; height:35px; margin-left:0;">+</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title" style="margin-bottom:12px;">📜 Rules & Regulations</h3>
+                        <ul class="dynamic-list" id="rules-list">
+                            <li><span>1. No plagiarism allowed.</span><button class="btn-delete-item" onclick="this.parentElement.remove()">×</button></li>
+                            <li><span>2. Max team size: 4 members.</span><button class="btn-delete-item" onclick="this.parentElement.remove()">×</button></li>
+                            <li><span>3. Submit checkpoint links on time.</span><button class="btn-delete-item" onclick="this.parentElement.remove()">×</button></li>
+                        </ul>
+                        <div class="input-group-inline">
+                            <input type="text" id="input-rule" class="form-control" placeholder="Add custom rule text...">
+                            <button class="btn-orange-plus" id="btn-add-rule" style="width:35px; height:35px; margin-left:0;">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2-col">
+                    <div class="card" style="margin-bottom: 0;">
+                        <h3 class="card-title">📊 Student Engagement Telemetry</h3>
+                        <p style="font-size: 13px; color: #6b7280; margin-top: 10px; line-height: 1.5;">
+                            Ice-breaking rapid fires, submission response speed counters, and workspace active statuses monitoring pipeline.
+                        </p>
+                    </div>
+
+                    <div class="card" style="margin-bottom: 0;">
+                        <div class="media-hub-card-flex">
+                            <div class="media-hub-details-left">
+                                <h3 class="card-title" style="color:#1f2937;">🔗 Registration & Media Hub</h3>
+                                <p style="margin-top: 6px;"><strong>Google Drive Link:</strong> <a href="#" class="media-hub-link">folder/hackathon-media</a></p>
+                                <p><strong>QR Status:</strong> Realtime QR verification active.</p>
+                                <p style="color: var(--success-green); font-weight: 600; display: flex; align-items: center; gap: 4px; margin-top: 2px;">
+                                    <span style="width: 7px; height: 7px; background-color: var(--success-green); border-radius: 50%;"></span> Live Syncing
+                                </p>
+                            </div>
+                            <div class="media-hub-qr-right">
+                                <div class="qr-matrix-block"></div>
+                                <div class="media-hub-qr-placeholder">LIVE QR</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 20px; margin-bottom: 25px;">
+                    <h3 class="card-title">🧑‍⚖️ Judges & Evaluation Sheets</h3>
+                    <div class="judges-pipeline-flow-wrapper" style="margin-top: 15px;">
+                        <div class="pipeline-step">
+                            <div class="pipeline-step-title">Mentor Round</div>
+                            <div class="pipeline-step-status status-completed">Completed</div>
+                        </div>
+                        <div class="pipeline-arrow">➔</div>
+                        <div class="pipeline-step">
+                            <div class="pipeline-step-title">1st Evaluation</div>
+                            <div class="pipeline-step-status status-inprogress">In-Progress</div>
+                        </div>
+                        <div class="pipeline-arrow">➔</div>
+                        <div class="pipeline-step">
+                            <div class="pipeline-step-title">2nd Evaluation</div>
+                            <div class="pipeline-step-status status-pending">Pending</div>
+                        </div>
+                        <div class="pipeline-arrow">➔</div>
+                        <div class="pipeline-step">
+                            <div class="pipeline-step-title">Final Evaluation</div>
+                            <div class="pipeline-step-status status-pending">Pending</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card" style="margin-top: 15px;">
+                    <h3 class="card-title">📢 Live Notice Board & Updates</h3>
+                    <p style="font-size: 12px; color: #6b7280; margin-bottom: 12px;">Real-time stream of latest announcements pushed by R5 Administration.</p>
+                    <div class="notice-stream-container" id="notice-board-container">
+                        <div class="notice-item alert-type">
+                            <div class="notice-content-left">
+                                <h4>Hello Interns Quick Fast</h4>
+                                <p style="font-size: 13px; color: #4b5563;">ss</p>
+                            </div>
+                            <div class="notice-actions-right">
+                                <span class="notice-tag tag-alert">Alert</span>
+                                <button class="btn-delete-notice" onclick="this.closest('.notice-item').remove()">Delete Notice</button>
+                            </div>
+                        </div>
+                        <div class="notice-item news-type">
+                            <div class="notice-content-left">
+                                <h4>Welcome to Hackathon Portal!</h4>
+                                <p style="font-size: 13px; color: #4b5563;">R5 Administration has initiated the event platform. Complete registration setup.</p>
+                            </div>
+                            <div class="notice-actions-right">
+                                <span class="notice-tag tag-news">News</span>
+                                <button class="btn-delete-notice" onclick="this.closest('.notice-item').remove()">Delete Notice</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="teamsDisplayModal" class="teams-modal-overlay">
+        <div class="teams-modal-viewport">
+            <div class="modal-header-section">
+                <h3 style="color: var(--text-dark); font-size: 16px; font-weight: 700;">📋 Live Database: 42 Registered Teams</h3>
+                <button class="btn-close-modal" id="btnCloseTeamsView">&times;</button>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">ID</th>
+                            <th>Team Name Matrix</th>
+                            <th>Members Allocation</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modal-live-teams-rows">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-context-menu" class="custom-context-menu"><div class="context-menu-item" id="context-menu-delete-btn">🗑️ Delete Event</div></div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
