@@ -138,8 +138,11 @@
                         <div class="broadcast-card-inner">
                             <input type="text" id="broadcast-headline" class="form-control" placeholder="Headline / Title" style="margin-bottom:0;">
                             <select id="broadcast-type" class="broadcast-select">
-                                <option value="Important Alert">Important Alert</option>
-                                <option value="General News">General News</option>
+                                <option value="Important Announcement">Important Announcement</option>
+                                <option value="Alerts or News">Alerts or News</option>
+                                <option value="Checkpoint">Checkpoint</option>
+                                <option value="Uploads">Uploads</option>
+                                <option value="Doc Upload">Doc Upload</option>
                             </select>
                             <input type="text" id="broadcast-desc" class="form-control" placeholder="'Short description details...'" style="margin-bottom:0;">
                             <button id="btn-submit-broadcast" class="broadcast-btn-submit">Broadcast Live Update</button>
@@ -147,27 +150,28 @@
                     </div>
 
                     <div class="card">
-                        <h3 class="card-title" style="margin-bottom:12px;">⏱️ Schedule / Itinerary</h3>
+                        <h3 class="card-title" style="margin-bottom:12px;">⏱️ Schedule / Itinerary <button type="button" id="btn-undo-schedule" class="btn-undo-list">Undo</button></h3>
                         <ul class="dynamic-list" id="schedule-list">
-                            <li><span>09:00 AM - Orientation</span><button class="btn-delete-item" onclick="this.parentElement.remove()">×</button></li>
-                            <li><span>10:30 AM - Hacking Starts</span><button class="btn-delete-item" onclick="this.parentElement.remove()">×</button></li>
-                            <li><span>02:00 PM - Mentor Review</span><button class="btn-delete-item" onclick="this.parentElement.remove()">×</button></li>
+                            <li><span>09:00 AM - Orientation</span><button class="btn-delete-item" onclick="removeListItem(this, 'schedule')">×</button></li>
+                            <li><span>10:30 AM - Hacking Starts</span><button class="btn-delete-item" onclick="removeListItem(this, 'schedule')">×</button></li>
+                            <li><span>02:00 PM - Mentor Review</span><button class="btn-delete-item" onclick="removeListItem(this, 'schedule')">×</button></li>
                         </ul>
                         <div class="input-group-inline">
-                            <input type="text" id="input-schedule" class="form-control" placeholder="e.g., 04:00 PM - Run">
-                            <button class="btn-orange-plus" id="btn-add-schedule" style="width:35px; height:35px; margin-left:0;">+</button>
+                            <input type="time" id="input-schedule-time" class="form-control" value="09:00" step="60">
+                            <input type="text" id="input-schedule-text" class="form-control" placeholder="e.g., Run">
+                            <button class="btn-orange-plus" id="btn-add-schedule" style="width:75px; height:33px; margin-left:0;">+</button>
                         </div>
                     </div>
 
                     <div class="card">
-                        <h3 class="card-title" style="margin-bottom:12px;">📜 Rules & Regulations</h3>
+                        <h3 class="card-title" style="margin-bottom:12px;">📜 Rules & Regulations <button type="button" id="btn-undo-rule" class="btn-undo-list">Undo</button></h3>
                         <ul class="dynamic-list" id="rules-list">
-                            <li><span>1. No plagiarism allowed.</span><button class="btn-delete-item" onclick="this.parentElement.remove()">×</button></li>
-                            <li><span>2. Max team size: 4 members.</span><button class="btn-delete-item" onclick="this.parentElement.remove()">×</button></li>
-                            <li><span>3. Submit checkpoint links on time.</span><button class="btn-delete-item" onclick="this.parentElement.remove()">×</button></li>
+                            <li><span>1. No plagiarism allowed.</span><button class="btn-delete-item" onclick="removeListItem(this, 'rule')">×</button></li>
+                            <li><span>2. Max team size: 4 members.</span><button class="btn-delete-item" onclick="removeListItem(this, 'rule')">×</button></li>
+                            <li><span>3. Submit checkpoint links on time.</span><button class="btn-delete-item" onclick="removeListItem(this, 'rule')">×</button></li>
                         </ul>
                         <div class="input-group-inline">
-                            <input type="text" id="input-rule" class="form-control" placeholder="Add custom rule text...">
+                            <input type="text" id="input-rule" class="form-control" placeholder="Format: Rule 1 - Keep team size under 4">
                             <button class="btn-orange-plus" id="btn-add-rule" style="width:35px; height:35px; margin-left:0;">+</button>
                         </div>
                     </div>
@@ -225,30 +229,9 @@
                 </div>
                 
                 <div class="card" style="margin-top: 15px;">
-                    <h3 class="card-title">📢 Live Notice Board & Updates</h3>
+                    <h3 class="card-title">📢 Live Notice Board & Updates <button type="button" id="btn-undo-notice" class="btn-undo-list">Undo</button></h3>
                     <p style="font-size: 12px; color: #6b7280; margin-bottom: 12px;">Real-time stream of latest announcements pushed by R5 Administration.</p>
-                    <div class="notice-stream-container" id="notice-board-container">
-                        <div class="notice-item alert-type">
-                            <div class="notice-content-left">
-                                <h4>Hello Interns Quick Fast</h4>
-                                <p style="font-size: 13px; color: #4b5563;">ss</p>
-                            </div>
-                            <div class="notice-actions-right">
-                                <span class="notice-tag tag-alert">Alert</span>
-                                <button class="btn-delete-notice" onclick="this.closest('.notice-item').remove()">Delete Notice</button>
-                            </div>
-                        </div>
-                        <div class="notice-item news-type">
-                            <div class="notice-content-left">
-                                <h4>Welcome to Hackathon Portal!</h4>
-                                <p style="font-size: 13px; color: #4b5563;">R5 Administration has initiated the event platform. Complete registration setup.</p>
-                            </div>
-                            <div class="notice-actions-right">
-                                <span class="notice-tag tag-news">News</span>
-                                <button class="btn-delete-notice" onclick="this.closest('.notice-item').remove()">Delete Notice</button>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="notice-stream-container" id="notice-board-container"></div>
                 </div>
             </div>
         </main>

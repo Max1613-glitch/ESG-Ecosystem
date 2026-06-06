@@ -156,21 +156,92 @@ const buttonsContainer = document.getElementById('events-buttons-container');
             });
         });
 
+        const deletedScheduleItems = [];
+        const deletedRuleItems = [];
+        const deletedNoticeItems = [];
+
+        function removeListItem(button, listType) {
+            const item = button.closest('li');
+            if (!item) return;
+
+            if (listType === 'schedule') {
+                deletedScheduleItems.push(item.outerHTML);
+            } else {
+                deletedRuleItems.push(item.outerHTML);
+            }
+
+            item.remove();
+        }
+
+        function restoreLastListItem(listType) {
+            const deletedItems = listType === 'schedule' ? deletedScheduleItems : deletedRuleItems;
+            if (deletedItems.length === 0) return;
+
+            const listId = listType === 'schedule' ? 'schedule-list' : 'rules-list';
+            const list = document.getElementById(listId);
+            const temp = document.createElement('li');
+            temp.innerHTML = deletedItems.shift();
+            const restoredItem = temp.firstElementChild;
+
+            if (restoredItem) {
+                list.appendChild(restoredItem);
+            }
+        }
+
+        function removeNoticeItem(button) {
+            const item = button.closest('.notice-item');
+            if (!item) return;
+            deletedNoticeItems.push(item.outerHTML);
+            item.remove();
+        }
+
+        function restoreLastNoticeItem() {
+            if (deletedNoticeItems.length === 0) return;
+            const noticeBoard = document.getElementById('notice-board-container');
+            const temp = document.createElement('div');
+            temp.innerHTML = deletedNoticeItems.shift();
+            const restoredItem = temp.firstElementChild;
+            if (restoredItem) {
+                noticeBoard.appendChild(restoredItem);
+            }
+        }
+
+        document.getElementById('btn-undo-schedule').addEventListener('click', () => restoreLastListItem('schedule'));
+        document.getElementById('btn-undo-rule').addEventListener('click', () => restoreLastListItem('rule'));
+        document.getElementById('btn-undo-notice').addEventListener('click', restoreLastNoticeItem);
+
         document.getElementById('btn-add-schedule').addEventListener('click', () => {
-            const inp = document.getElementById('input-schedule');
-            if(!inp.value.trim()) return;
+            const timeInput = document.getElementById('input-schedule-time');
+            const textInput = document.getElementById('input-schedule-text');
+            const timeValue = timeInput.value;
+            const textValue = textInput.value.trim();
+
+            if (!timeValue || !textValue) return;
+
+            const formattedTime = new Date(`1970-01-01T${timeValue}`).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+
             const li = document.createElement('li');
-            li.innerHTML = `<span>${inp.value.trim()}</span><button class="btn-delete-item" onclick="this.parentElement.remove()">×</button>`;
+            li.innerHTML = `<span>${formattedTime} - ${textValue}</span><button class="btn-delete-item" onclick="removeListItem(this, 'schedule')">×</button>`;
             document.getElementById('schedule-list').appendChild(li);
-            inp.value = '';
+            textInput.value = '';
         });
 
         document.getElementById('btn-add-rule').addEventListener('click', () => {
             const inp = document.getElementById('input-rule');
             if(!inp.value.trim()) return;
+
+            const ruleList = document.getElementById('rules-list');
+            const existingItems = Array.from(ruleList.querySelectorAll('li'));
+            const lastText = existingItems.length ? existingItems[existingItems.length - 1].querySelector('span')?.textContent || '' : '';
+            const nextNumber = existingItems.length ? (parseInt(lastText.match(/^\d+/), 10) || 0) + 1 : 1;
+
             const li = document.createElement('li');
-            li.innerHTML = `<span>${inp.value.trim()}</span><button class="btn-delete-item" onclick="this.parentElement.remove()">×</button>`;
-            document.getElementById('rules-list').appendChild(li);
+            li.innerHTML = `<span>${nextNumber}. ${inp.value.trim()}</span><button class="btn-delete-item" onclick="removeListItem(this, 'rule')">×</button>`;
+            ruleList.appendChild(li);
             inp.value = '';
         });
 
@@ -185,16 +256,20 @@ const buttonsContainer = document.getElementById('events-buttons-container');
             if (!headline) return;
 
             const noticeItem = document.createElement('div');
-            const typeClass = typeSelect.value.includes('Alert') ? 'alert-type' : 'news-type';
-            const tagClass = typeSelect.value.includes('Alert') ? 'tag-alert' : 'tag-news';
-            const tagName = typeSelect.value.includes('Alert') ? 'Alert' : 'News';
+            const selectedType = typeSelect.value;
+            const typeClass = selectedType.includes('Alert') || selectedType.includes('Announcement') || selectedType === 'Checkpoint' ? 'alert-type' : 'news-type';
+            const tagClass = selectedType.includes('Alert') || selectedType.includes('Announcement') || selectedType === 'Checkpoint' ? 'tag-alert' : 'tag-news';
+            const tagName = selectedType || 'News';
 
             noticeItem.className = `notice-item ${typeClass}`;
             noticeItem.innerHTML = `
-                <div class="notice-content-left"><h4>${headline}</h4><p style="font-size: 13px; color: #4b5563;">${desc}</p></div>
+                <div class="notice-content-left">
+                    <h4>${headline}</h4>
+                    <p style="font-size: 13px; color: #4b5563;">${desc}</p>
+                </div>
                 <div class="notice-actions-right">
                     <span class="notice-tag ${tagClass}">${tagName}</span>
-                    <button class="btn-delete-notice" onclick="this.closest('.notice-item').remove()">Delete Notice</button>
+                    <button class="btn-delete-notice" onclick="removeNoticeItem(this)">Delete Notice</button>
                 </div>`;
             noticeBoard.insertBefore(noticeItem, noticeBoard.firstChild);
             headlineInput.value = '';
